@@ -4,29 +4,39 @@ import shutil
 import re
 
 def main():
-    if len(sys.argv) == 1:
-        raise Exception("No arguments provided")
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
-            print("Usage: python3 music.py <path to music folder>")
-            sys.exit(0)
-        elif sys.argv[1] == "-v" or sys.argv[1] == "--version":
-            print("music.py 1.1.0")
-            sys.exit(0)
-        elif sys.argv[1] == "-a" or sys.argv[1] == "--author":
-            print("Author: Graydon Wasil")
-            sys.exit(0)
-        elif sys.argv[1] == "artists" or sys.argv[1] == "--artists":
-            print("Executing Artist arrangement")
-            handle_artists()
-        elif sys.argv[1] == "albums" or sys.argv[1] == "--albums":
-            print("Executing Album arrangement")
-            handle_albums()
-        elif sys.argv[1] == "songs" or sys.argv[1] == "--songs":
-            print("Executing Song arrangement")
-            handle_songs()
-        else:
-            raise Exception("Invalid argument")
+    try:
+        if len(sys.argv) == 1:
+            raise Exception("No arguments provided")
+        elif len(sys.argv) == 2:
+            if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+                print("Thank you for using music.py")
+                print("Use -v or --version to get the version")
+                print("Use -a or --author to get the author")
+                print("Use artists or --artists to arrange your music by artist")
+                print("Use albums or --albums to arrange your music by album")
+                print("Use songs or --songs to arrange your music by songs")
+                sys.exit(0)
+            elif sys.argv[1] == "-v" or sys.argv[1] == "--version":
+                print("music.py 1.1.0")
+                sys.exit(0)
+            elif sys.argv[1] == "-a" or sys.argv[1] == "--author":
+                print("Author: Graydon Wasil")
+                sys.exit(0)
+            elif sys.argv[1] == "artists" or sys.argv[1] == "--artists":
+                print("Executing Artist arrangement")
+                handle_artists()
+            elif sys.argv[1] == "albums" or sys.argv[1] == "--albums":
+                print("Executing Album arrangement")
+                handle_albums()
+            elif sys.argv[1] == "songs" or sys.argv[1] == "--songs":
+                print("Executing Song arrangement")
+                handle_songs()
+            else:
+                raise Exception("Invalid argument")
+    except Exception as e:
+        print(e)
+        print("Use -h or --help for help")
+        sys.exit(1)
 
 def handle_artists():
     music_folder = os.getcwd()
@@ -55,7 +65,7 @@ def handle_albums():
     for artist in os.listdir(music_folder):
         artist_path = os.path.join(music_folder, artist)
         artist_name = os.path.basename(artist_path)
-        for album in os.listdir(artist):
+        for album in os.listdir(artist_path):
             album_path = os.path.join(music_folder, artist, album)
             if os.path.isdir(album_path):
                 if artist_name in album:
@@ -101,8 +111,8 @@ def check_song_number(album_path):
         if match:
                 track_number, track_name = match.groups()
                 track_number = int(track_number)
-                if track_number != (index + 1):
-                    new_song_name = f"{(index + 1):02d} - {track_name}" 
+                if track_number != index:
+                    new_song_name = f"{index:02d} - {track_name}" 
                     new_song_path = os.path.join(album_path, new_song_name)
                     os.rename(os.path.join(album_path, song_name), new_song_path)
                     print(f"Renamed: {song_name} -> {new_song_name}")
